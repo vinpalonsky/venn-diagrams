@@ -120,64 +120,75 @@ def circles_intersections(circles: list[Circle]):
 			pygame.draw.circle(surface, "white", (intersection_x1, intersection_y1), 5)
 			pygame.draw.circle(surface, "white", (intersection_x2, intersection_y2), 5)
 
-			middle_point_x = (intersection_x1+intersection_x2)/2
-			middle_point_y = (intersection_y1+intersection_y2)/2
+			tita_start = math.acos((intersection_x1-x1)/r1)
+			tita_finish = math.acos((intersection_x2-x1)/r1)
+			tita_d = tita_finish-tita_start
 
-			pygame.draw.circle(surface, "white", (middle_point_x, middle_point_y), 5)
-
-			if intersection_x1!=intersection_x2 and intersection_y1!=intersection_y2:
-				vector_principal_x = intersection_x1-middle_point_x
-				vector_principal_y = intersection_y1-middle_point_y
-
-				vector_ortogonal_x = vector_principal_y
-				vector_ortogonal_y = -vector_principal_x
-
-				slope = vector_ortogonal_y/vector_ortogonal_x
-
-				box_center_dist1 = r1 - distance_between_points(middle_point_x, middle_point_y, x1, y1)
-				box_center_dist2 = r2 - distance_between_points(middle_point_x, middle_point_y, x2, y2)
-
-				box_right_x = box_right_y = box_left_x = box_left_y = 0
-				if x2>x1:
-					box_right_x = box_center_dist1/math.sqrt(1 + slope*slope) + middle_point_x
-					box_right_y = (box_center_dist1*slope)/math.sqrt(1 + slope*slope) + middle_point_y
-					box_left_x = -box_center_dist2/math.sqrt(1 + slope*slope) + middle_point_x
-					box_left_y = -(box_center_dist2*slope)/math.sqrt(1 + slope*slope) + middle_point_y
-				else:
-					box_right_x = box_center_dist2/math.sqrt(1 + slope*slope) + middle_point_x
-					box_right_y = (box_center_dist2*slope)/math.sqrt(1 + slope*slope) + middle_point_y
-					box_left_x = -box_center_dist1/math.sqrt(1 + slope*slope) + middle_point_x
-					box_left_y = -(box_center_dist1*slope)/math.sqrt(1 + slope*slope) + middle_point_y
+			steps = 200
+			for t in range(steps):
+				draw_tita = tita_start+tita_d*t/steps
+				(draw_x, draw_y) = (r1*math.cos(draw_tita)+x1, r1*math.sin(draw_tita)+y1)
+				pygame.draw.circle(surface, "red", (draw_x, draw_y), 2)
 
 
-				pygame.draw.circle(surface, "white", (box_right_x, box_right_y), 5)
-				pygame.draw.circle(surface, "white", (box_left_x, box_left_y), 5)
+			# middle_point_x = (intersection_x1+intersection_x2)/2
+			# middle_point_y = (intersection_y1+intersection_y2)/2
 
-				(box_up_left_x, box_up_left_y) = lines_intersection((vector_ortogonal_x, vector_ortogonal_y), (intersection_x1, intersection_y1), (vector_principal_x, vector_principal_y), (box_left_x, box_left_y))
-				(box_down_left_x, box_down_left_y) = lines_intersection((vector_ortogonal_x, vector_ortogonal_y), (intersection_x2, intersection_y2), (vector_principal_x, vector_principal_y), (box_left_x, box_left_y))
-				(box_up_right_x, box_up_right_y) = lines_intersection((vector_ortogonal_x, vector_ortogonal_y), (intersection_x1, intersection_y1), (vector_principal_x, vector_principal_y), (box_right_x, box_right_y))
-				(box_down_right_x, box_down_right_y) = lines_intersection((vector_ortogonal_x, vector_ortogonal_y), (intersection_x2, intersection_y2), (vector_principal_x, vector_principal_y), (box_right_x, box_right_y))
-				pygame.draw.circle(surface, "white", (box_up_left_x, box_up_left_y), 5)
-				pygame.draw.circle(surface, "white", (box_down_left_x, box_down_left_y), 5)
-				pygame.draw.circle(surface, "white", (box_up_right_x, box_up_right_y), 5)
-				pygame.draw.circle(surface, "white", (box_down_right_x, box_down_right_y), 5)
+			# pygame.draw.circle(surface, "white", (middle_point_x, middle_point_y), 5)
 
-				actual_point_x = box_down_left_x
-				actual_point_y = box_down_left_y
-				final_horizontal_point_x = box_down_right_x
-				final_horizontal_point_y = box_down_right_y
-				final_vertical_point = (box_up_right_x, box_up_right_y)
+			# if intersection_x1!=intersection_x2 and intersection_y1!=intersection_y2:
+			# 	vector_principal_x = intersection_x1-middle_point_x
+			# 	vector_principal_y = intersection_y1-middle_point_y
+
+			# 	vector_ortogonal_x = vector_principal_y
+			# 	vector_ortogonal_y = -vector_principal_x
+
+			# 	slope = vector_ortogonal_y/vector_ortogonal_x
+
+			# 	box_center_dist1 = r1 - distance_between_points(middle_point_x, middle_point_y, x1, y1)
+			# 	box_center_dist2 = r2 - distance_between_points(middle_point_x, middle_point_y, x2, y2)
+
+			# 	box_right_x = box_right_y = box_left_x = box_left_y = 0
+			# 	if x2>x1:
+			# 		box_right_x = box_center_dist1/math.sqrt(1 + slope*slope) + middle_point_x
+			# 		box_right_y = (box_center_dist1*slope)/math.sqrt(1 + slope*slope) + middle_point_y
+			# 		box_left_x = -box_center_dist2/math.sqrt(1 + slope*slope) + middle_point_x
+			# 		box_left_y = -(box_center_dist2*slope)/math.sqrt(1 + slope*slope) + middle_point_y
+			# 	else:
+			# 		box_right_x = box_center_dist2/math.sqrt(1 + slope*slope) + middle_point_x
+			# 		box_right_y = (box_center_dist2*slope)/math.sqrt(1 + slope*slope) + middle_point_y
+			# 		box_left_x = -box_center_dist1/math.sqrt(1 + slope*slope) + middle_point_x
+			# 		box_left_y = -(box_center_dist1*slope)/math.sqrt(1 + slope*slope) + middle_point_y
+
+
+			# 	pygame.draw.circle(surface, "white", (box_right_x, box_right_y), 5)
+			# 	pygame.draw.circle(surface, "white", (box_left_x, box_left_y), 5)
+
+			# 	(box_up_left_x, box_up_left_y) = lines_intersection((vector_ortogonal_x, vector_ortogonal_y), (intersection_x1, intersection_y1), (vector_principal_x, vector_principal_y), (box_left_x, box_left_y))
+			# 	(box_down_left_x, box_down_left_y) = lines_intersection((vector_ortogonal_x, vector_ortogonal_y), (intersection_x2, intersection_y2), (vector_principal_x, vector_principal_y), (box_left_x, box_left_y))
+			# 	(box_up_right_x, box_up_right_y) = lines_intersection((vector_ortogonal_x, vector_ortogonal_y), (intersection_x1, intersection_y1), (vector_principal_x, vector_principal_y), (box_right_x, box_right_y))
+			# 	(box_down_right_x, box_down_right_y) = lines_intersection((vector_ortogonal_x, vector_ortogonal_y), (intersection_x2, intersection_y2), (vector_principal_x, vector_principal_y), (box_right_x, box_right_y))
+			# 	pygame.draw.circle(surface, "white", (box_up_left_x, box_up_left_y), 5)
+			# 	pygame.draw.circle(surface, "white", (box_down_left_x, box_down_left_y), 5)
+			# 	pygame.draw.circle(surface, "white", (box_up_right_x, box_up_right_y), 5)
+			# 	pygame.draw.circle(surface, "white", (box_down_right_x, box_down_right_y), 5)
+
+			# 	actual_point_x = box_down_left_x
+			# 	actual_point_y = box_down_left_y
+			# 	final_horizontal_point_x = box_down_right_x
+			# 	final_horizontal_point_y = box_down_right_y
+			# 	final_vertical_point = (box_up_right_x, box_up_right_y)
 
 				# while actual_point_x!=final_vertical_point[0] and actual_point_y!=final_vertical_point[1]:
-				while actual_point_x!=final_horizontal_point_x:
+				# while actual_point_x!=final_horizontal_point_x:
 					# pygame.draw.rect(surface, "white", (actual_point_x, actual_point_y, 1, 1))
 					# actual_point_x += vector_ortogonal_x+final_horizontal_point_x
-					actual_point_x += 1
+					# actual_point_x += 1
 					# actual_point_y += vector_ortogonal_y+final_horizontal_point_y
 					# actual_point_y = (actual_point_x-box_down_left_x)*vector_ortogonal_y/vector_ortogonal_x+box_down_left_y
 
-				actual_point_x += vector_principal_x+box_up_left_x
-				actual_point_y += vector_principal_y+box_up_left_y
+				# actual_point_x += vector_principal_x+box_up_left_x
+				# actual_point_y += vector_principal_y+box_up_left_y
 				# 	final_horizontal_point_x += vector_principal_x+final_vertical_point[0]
 				# 	final_horizontal_point_y += vector_principal_y+final_vertical_point[1]
 
